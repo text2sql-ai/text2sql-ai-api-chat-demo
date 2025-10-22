@@ -1,12 +1,9 @@
+import Header from '@/components/header'
+import TanStackQueryDevtools from '@/integrations/tanstack-query/devtools'
+import { TanStackDevtools } from '@tanstack/react-devtools'
+import type { QueryClient } from '@tanstack/react-query'
 import { Outlet, createRootRouteWithContext } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
-import { TanStackDevtools } from '@tanstack/react-devtools'
-
-import Header from '../components/Header'
-
-import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
-
-import type { QueryClient } from '@tanstack/react-query'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -14,7 +11,7 @@ interface MyRouterContext {
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: () => (
-    <>
+    <div className="h-screen overflow-hidden">
       <Header />
       <Outlet />
       <TanStackDevtools
@@ -29,6 +26,6 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
           TanStackQueryDevtools,
         ]}
       />
-    </>
+    </div>
   ),
 })
