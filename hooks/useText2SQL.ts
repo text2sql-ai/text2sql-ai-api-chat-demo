@@ -11,7 +11,7 @@ export interface Text2SQLRequest {
 export interface Text2SQLResponse {
   output: string | null;
   explanation: string;
-  results?: any[];
+  results?: any[]; // eslint-disable-line @typescript-eslint/no-explicit-any
   runError?: string;
   conversationID: string;
 }

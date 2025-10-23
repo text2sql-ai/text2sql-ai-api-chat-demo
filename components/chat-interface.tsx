@@ -6,14 +6,7 @@ import { useChatStore } from "@/store/chatStore";
 import type { Message } from "@/types/chat";
 
 export default function ChatInterface() {
-  const {
-    messages,
-    conversationId,
-    mode,
-    limit,
-    addMessage,
-    setConversationId,
-  } = useChatStore();
+  const { messages, conversationId, mode, limit, addMessage, setConversationId } = useChatStore();
   const { generateSQL, isLoading } = useText2SQL();
 
   const handleSendMessage = async (content: string) => {
@@ -50,11 +43,10 @@ export default function ChatInterface() {
       if (response.conversationID) {
         setConversationId(response.conversationID);
       }
-    } catch (error) {
+    } catch {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content:
-          "Sorry, I encountered an error processing your request. Please try again.",
+        content: "Sorry, I encountered an error processing your request. Please try again.",
         role: "assistant",
         timestamp: new Date(),
       };
