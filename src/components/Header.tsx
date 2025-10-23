@@ -23,15 +23,17 @@ export default function Header() {
             className="flex items-center hover:opacity-80 transition-opacity"
           >
             <img
-              className="mr-2"
+              className="mr-2 size-6"
               src={'/logo_icon.svg'}
-              width={32}
-              height={32}
               alt="logo icon"
             />
-            <span className="text-lg font-semibold">Text2SQL.ai</span>
+            <span className="text-base sm:text-lg font-semibold">
+              Text2SQL.ai
+            </span>
           </a>
-          <span className="ml-4 text-sm text-gray-300">Chat Demo</span>
+          <span className="ml-4 text-sm text-gray-300 hidden sm:block">
+            Chat Demo
+          </span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -41,7 +43,7 @@ export default function Header() {
             className="text-gray-300 fill-gray-300 hover:text-white hover:fill-white hover:bg-white/10"
             onClick={goToDocs}
           >
-            API Docs
+            <span className="hidden sm:inline">API </span>Docs
             <ArrowUpRight className="size-3" />
           </Button>
           <Button
@@ -51,7 +53,7 @@ export default function Header() {
             onClick={goToRepository}
           >
             <GitHub className="size-4" />
-            GitHub
+            <span className="hidden sm:inline">GitHub</span>
             <ArrowUpRight className="size-3" />
           </Button>
         </div>
