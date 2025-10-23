@@ -1,50 +1,46 @@
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import { useChatStore } from '@/store/chatStore'
-import { Database, Loader2, MessageCircle, Send, Trash } from 'lucide-react'
-import { useState } from 'react'
-import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip'
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { useChatStore } from "@/store/chatStore";
+import { Database, Loader2, MessageCircle, Send, Trash } from "lucide-react";
+import { useState } from "react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 interface ChatInputProps {
-  onSendMessage: (message: string) => void
-  isLoading: boolean
+  onSendMessage: (message: string) => void;
+  isLoading: boolean;
 }
 
 const TOOLTIP_CONTENT = {
-  conversational:
-    'Conversational mode: Allows clarifying questions when the request is ambiguous',
-  'one-shot': 'One-shot mode: Immediate SQL generation',
-}
+  conversational: "Conversational mode: Allows clarifying questions when the request is ambiguous",
+  "one-shot": "One-shot mode: Immediate SQL generation",
+};
 
-export default function ChatInput({
-  onSendMessage,
-  isLoading,
-}: ChatInputProps) {
-  const [message, setMessage] = useState('')
-  const { clearHistory, mode, setMode } = useChatStore()
+export default function ChatInput({ onSendMessage, isLoading }: ChatInputProps) {
+  const [message, setMessage] = useState("");
+  const { clearHistory, mode, setMode } = useChatStore();
 
   const handleClearHistory = () => {
-    clearHistory()
-  }
+    clearHistory();
+  };
 
   const toggleMode = () => {
-    setMode(mode === 'conversational' ? 'one-shot' : 'conversational')
-  }
+    setMode(mode === "conversational" ? "one-shot" : "conversational");
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (message.trim() && !isLoading) {
-      onSendMessage(message.trim())
-      setMessage('')
+      onSendMessage(message.trim());
+      setMessage("");
     }
-  }
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSubmit(e)
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e);
     }
-  }
+  };
 
   return (
     <div className="p-2 sm:p-4 pb-2 border border-t-0 rounded-xl rounded-t-none border-white/10 bg-black/10 backdrop-blur-sm">
@@ -62,17 +58,11 @@ export default function ChatInput({
           disabled={!message.trim() || isLoading}
           className="absolute top-1.5 sm:top-2 right-1.5 sm:right-2 text-white size-6 sm:size-8 p-0 bg-[#6D29D9] hover:bg-[#581C99]"
         >
-          {isLoading ? (
-            <Loader2 className="animate-spin size-3 sm:size-4" />
-          ) : (
-            <Send className="size-3 sm:size-4" />
-          )}
+          {isLoading ? <Loader2 className="animate-spin size-3 sm:size-4" /> : <Send className="size-3 sm:size-4" />}
         </Button>
       </form>
       <div className="flex items-center justify-end sm:justify-between gap-2 sm:gap-4 mt-1 sm:mt-2">
-        <p className="text-xs text-gray-400 hidden sm:block">
-          Press Enter to send, Shift+Enter for new line
-        </p>
+        <p className="text-xs text-gray-400 hidden sm:block">Press Enter to send, Shift+Enter for new line</p>
         <div className="flex items-center gap-0.5 mr-1">
           <Tooltip>
             <TooltipTrigger asChild>
@@ -82,14 +72,14 @@ export default function ChatInput({
                 className="h-5 sm:h-6 text-xs rounded-sm text-gray-300 hover:text-white hover:bg-white/10"
                 onClick={toggleMode}
               >
-                {mode === 'conversational' && (
+                {mode === "conversational" && (
                   <>
                     <MessageCircle className="size-3 sm:size-3.5" />
                     <span className="hidden sm:inline">Conversational</span>
                     <span className="sm:hidden">Chat</span>
                   </>
                 )}
-                {mode === 'one-shot' && (
+                {mode === "one-shot" && (
                   <>
                     <Database className="size-3 sm:size-3.5" />
                     <span className="hidden sm:inline">One-Shot</span>
@@ -111,7 +101,7 @@ export default function ChatInput({
                 className="size-5 sm:size-6 rounded-sm text-gray-300 hover:text-white hover:bg-white/10"
                 onClick={handleClearHistory}
               >
-                <Trash className="size-2.5 sm:size-3" />
+                <Trash className="size-3 sm:size-3.5" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
@@ -121,5 +111,5 @@ export default function ChatInput({
         </div>
       </div>
     </div>
-  )
+  );
 }

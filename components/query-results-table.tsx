@@ -147,10 +147,7 @@ export const QueryResultsTable = ({ rows, onLimitChange, limit }: QueryResultsTa
                         <Info className="h-4 w-4 text-gray-400 hover:text-gray-300" />
                       </span>
                     </TooltipTrigger>
-                    <TooltipContent
-                      className="max-w-[300px] bg-gray-800 p-3 text-sm leading-relaxed text-gray-200"
-                      sideOffset={5}
-                    >
+                    <TooltipContent className="max-w-[500px] p-3 text-xs leading-relaxed" sideOffset={5}>
                       <p className="m-0 whitespace-normal p-0">
                         Results are limited to optimize browser performance, especially for queries returning large
                         datasets. You can adjust or remove this limit using the dropdown.
