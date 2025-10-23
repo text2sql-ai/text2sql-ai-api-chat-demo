@@ -1,16 +1,11 @@
-import * as TanStackQueryProvider from '@/integrations/tanstack-query/root-provider.tsx'
 import { routeTree } from '@/routeTree.gen'
 import '@/styles.css'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 
-const TanStackQueryProviderContext = TanStackQueryProvider.getContext()
 const router = createRouter({
   routeTree,
-  context: {
-    ...TanStackQueryProviderContext,
-  },
   defaultPreload: 'intent',
   scrollRestoration: true,
   defaultStructuralSharing: true,
@@ -28,9 +23,7 @@ if (rootElement && !rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
     <StrictMode>
-      <TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
-        <RouterProvider router={router} />
-      </TanStackQueryProvider.Provider>
+      <RouterProvider router={router} />
     </StrictMode>,
   )
 }
