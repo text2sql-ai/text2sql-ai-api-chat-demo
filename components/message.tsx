@@ -3,12 +3,26 @@ import { useText2SQL } from "@/hooks/useText2SQL";
 import { useChatStore } from "@/store/chatStore";
 import type { Message as MessageType } from "@/types/chat";
 import { AlertCircle, CheckCircle, Copy, Database, Play } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import Prism, { type Grammar } from "prismjs";
+import "prismjs/components/prism-sql";
+import "prismjs/themes/prism-tomorrow.css";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { format, type SqlLanguage } from "sql-formatter";
 import { Button } from "./ui/button";
 
 interface MessageProps {
   message: MessageType;
 }
+
+const formatAndHighlightSQL = (code: string, dialect: string): string => {
+  try {
+    const formattedCode = format(code, { language: dialect as SqlLanguage });
+    const prismLanguage = Prism.languages[dialect] || (Prism.languages.sql as Grammar);
+    return Prism.highlight(formattedCode, prismLanguage, dialect);
+  } catch {
+    return code;
+  }
+};
 
 export default function Message({ message }: MessageProps) {
   const [copied, setCopied] = useState(false);
@@ -66,6 +80,11 @@ export default function Message({ message }: MessageProps) {
 
   const isUser = message.role === "user";
 
+  const highlightedCode = useMemo(
+    () => formatAndHighlightSQL(String(message.sql).replace(/\n$/, ""), "postgresql"),
+    [message.sql]
+  );
+
   // Auto-scroll to new messages
   useEffect(() => {
     if (messageRef.current) {
@@ -104,18 +123,20 @@ export default function Message({ message }: MessageProps) {
   }, []);
 
   return (
-    <div ref={messageRef} className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
-      <Card
-        style={{
-          maxWidth: scrollAreaWidth > 0 ? `${scrollAreaWidth * 0.8}px` : "90vw",
-        }}
-        className={`py-3 px-3 sm:px-4 rounded-lg border-none ${
-          isUser ? "bg-purple-600/20" : "bg-white/5 border-white/10"
-        }`}
-      >
-        <div className="flex items-start gap-2 sm:gap-3">
-          {!isUser && <img className="size-6 sm:size-8" src={"/logo_icon.svg"} alt="logo icon" />}
-
+    <div
+      ref={messageRef}
+      className={`flex ${isUser ? "justify-end" : "justify-start"} ${!isUser ? "gap-2 sm:gap-3" : ""}`}
+    >
+      {!isUser && <img className="size-6 sm:size-8 mt-2" src={"/logo_icon.svg"} alt="logo icon" />}
+      <div className={!isUser ? "flex-1" : ""}>
+        <Card
+          style={{
+            maxWidth: scrollAreaWidth > 0 ? `${scrollAreaWidth * 0.8}px` : "90vw",
+          }}
+          className={`py-3 px-3 sm:px-4 rounded-lg border-none ${
+            isUser ? "bg-purple-600/20" : "bg-white/5 border-white/10"
+          }`}
+        >
           <div className="flex-1 min-w-0">
             <div className="text-sm sm:text-base text-white">{message.content}</div>
 
@@ -158,9 +179,10 @@ export default function Message({ message }: MessageProps) {
                     </button>
                   </div>
                 </div>
-                <pre className="bg-black/30 p-2 sm:p-3 rounded-lg text-xs sm:text-sm text-green-400 overflow-x-auto border border-gray-700 no-scrollbar max-w-full">
-                  <code>{message.sql}</code>
-                </pre>
+                <pre
+                  className="p-4 mb-2 mt-0 overflow-y-auto rounded-md rounded-tr-none bg-gray-900 text-sm text-white"
+                  dangerouslySetInnerHTML={{ __html: highlightedCode }}
+                />
               </div>
             )}
 
@@ -198,8 +220,8 @@ export default function Message({ message }: MessageProps) {
               </div>
             )}
           </div>
-        </div>
-      </Card>
+        </Card>
+      </div>
     </div>
   );
 }
