@@ -30,9 +30,9 @@ A modern, interactive chat interface for converting natural language to SQL quer
    Create a `.env` file in the root directory:
 
    ```bash
-   VITE_TEXT2SQL_API_KEY=your_api_key_here
-   VITE_TEXT2SQL_CONNECTION_ID=your_connection_id_here  # Optional
-   VITE_TEXT2SQL_API_BASE_URL=https://api.text2sql.ai  # Optional, defaults to this
+   TEXT2SQL_API_KEY=your_api_key_here
+   TEXT2SQL_CONNECTION_ID=your_connection_id_here
+   TEXT2SQL_API_BASE_URL=https://api.text2sql.ai  # Optional, defaults to this
    ```
 
 4. **Start the development server:**
@@ -68,7 +68,7 @@ A modern, interactive chat interface for converting natural language to SQL quer
 
 ## 🔌 API Integration
 
-This application integrates with the Text2SQL API's Generate SQL endpoint. The app supports all API parameters including conversation memory, query execution, and both one-shot and conversational modes.
+This application uses a Next.js API route (`/api/text2sql`) that integrates with the Text2SQL API's Generate SQL endpoint. The backend handles all API parameters including conversation memory, query execution, and both one-shot and conversational modes.
 
 **📚 Complete API Documentation:** [text2sql.ai/docs/api-integration](https://www.text2sql.ai/docs/api-integration#generate-sql)
 
@@ -83,29 +83,26 @@ This application integrates with the Text2SQL API's Generate SQL endpoint. The a
 
 ## 🛠️ Tech Stack
 
-- **Frontend Framework**: React 19 with TypeScript
-- **Routing**: TanStack Router for file-based routing
+- **Frontend Framework**: Next.js 15 with React 19 and TypeScript
 - **State Management**: Zustand for client state
 - **Styling**: Tailwind CSS with custom design system
 - **UI Components**: shadcn/ui component library
 - **Icons**: Lucide React
-- **Build Tool**: Vite with TypeScript support
-- **Development**: ESLint + Prettier for code quality
+- **Build Tool**: Next.js with TypeScript support
+- **Development**: ESLint for code quality
 
 ## 🚀 Available Scripts
 
 ```bash
 # Development
-npm run dev          # Start development server on port 3003
+npm run dev          # Start Next.js development server
 
 # Building
 npm run build        # Build for production
-npm run serve        # Preview production build
+npm run start        # Start production server
 
 # Code Quality
 npm run lint         # Run ESLint
-npm run format       # Run Prettier
-npm run check        # Format and lint in one command
 ```
 
 ## 🔗 Links

@@ -1,9 +1,9 @@
-import ChatInput from '@/components/chat-input'
-import MessageList from '@/components/message-list'
-import { Card } from '@/components/ui/card'
-import { useText2SQL } from '@/hooks/useText2SQL'
-import { useChatStore } from '@/store/chatStore'
-import type { Message } from '@/types/chat'
+import ChatInput from "@/components/chat-input";
+import MessageList from "@/components/message-list";
+import { Card } from "@/components/ui/card";
+import { useText2SQL } from "@/hooks/useText2SQL";
+import { useChatStore } from "@/store/chatStore";
+import type { Message } from "@/types/chat";
 
 export default function ChatInterface() {
   const {
@@ -13,58 +13,54 @@ export default function ChatInterface() {
     limit,
     addMessage,
     setConversationId,
-  } = useChatStore()
-  const { generateSQL, isLoading } = useText2SQL()
+  } = useChatStore();
+  const { generateSQL, isLoading } = useText2SQL();
 
   const handleSendMessage = async (content: string) => {
     const userMessage: Message = {
       id: Date.now().toString(),
       content,
-      role: 'user',
+      role: "user",
       timestamp: new Date(),
-    }
+    };
 
-    addMessage(userMessage)
+    addMessage(userMessage);
 
     try {
-      const connectionID = import.meta.env.VITE_TEXT2SQL_CONNECTION_ID
-
       const response = await generateSQL({
         prompt: content,
         conversationID: conversationId,
-        runQuery: false,
         limit: limit,
         mode: mode,
-        ...(connectionID && { connectionID }),
-      })
+      });
 
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: response.explanation || 'Generated SQL query',
-        role: 'assistant',
+        content: response.explanation || "Generated SQL query",
+        role: "assistant",
         timestamp: new Date(),
         sql: response.output ?? undefined,
         explanation: response.explanation,
         results: response.results,
         runError: response.runError,
-      }
+      };
 
-      addMessage(assistantMessage)
+      addMessage(assistantMessage);
 
       if (response.conversationID) {
-        setConversationId(response.conversationID)
+        setConversationId(response.conversationID);
       }
     } catch (error) {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         content:
-          'Sorry, I encountered an error processing your request. Please try again.',
-        role: 'assistant',
+          "Sorry, I encountered an error processing your request. Please try again.",
+        role: "assistant",
         timestamp: new Date(),
-      }
-      addMessage(errorMessage)
+      };
+      addMessage(errorMessage);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col h-[calc(100svh-65px)] bg-transparent overflow-hidden">
@@ -75,5 +71,5 @@ export default function ChatInterface() {
         <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />
       </div>
     </div>
-  )
+  );
 }
