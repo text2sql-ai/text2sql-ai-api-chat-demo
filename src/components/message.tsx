@@ -8,9 +8,10 @@ import { Button } from './ui/button'
 
 interface MessageProps {
   message: MessageType
+  parentWidth: number
 }
 
-export default function Message({ message }: MessageProps) {
+export default function Message({ message, parentWidth }: MessageProps) {
   const [copied, setCopied] = useState(false)
   const [isRunning, setIsRunning] = useState(false)
   const messageRef = useRef<HTMLDivElement>(null)
@@ -101,7 +102,8 @@ export default function Message({ message }: MessageProps) {
       className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}
     >
       <Card
-        className={`max-w-[40svw] py-3 px-4 rounded-lg border-none ${
+        style={{ maxWidth: parentWidth ? `${parentWidth * 0.8}px` : '40svw' }}
+        className={`py-3 px-4 rounded-lg border-none ${
           isUser ? 'bg-purple-600/20' : 'bg-white/5 border-white/10'
         }`}
       >

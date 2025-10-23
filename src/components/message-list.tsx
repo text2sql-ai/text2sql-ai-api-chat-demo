@@ -1,15 +1,19 @@
 import Message from '@/components/message'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import type { Message as MessageType } from '@/types/chat'
+import { useRef } from 'react'
 
 interface MessageListProps {
   messages: MessageType[]
 }
 
 export default function MessageList({ messages }: MessageListProps) {
+  const messageListRef = useRef<HTMLDivElement>(null)
+  const width = messageListRef.current?.clientWidth ?? 0
+
   return (
     <ScrollArea className="flex-1 h-full">
-      <div className="px-4 py-0 space-y-4 pb-4">
+      <div className="px-4 py-0 space-y-4 pb-4" ref={messageListRef}>
         {messages.length === 0 && (
           <div className="text-center text-gray-400 py-8">
             <p className="text-lg mb-2">Welcome to Text2SQL Chat Demo</p>
@@ -26,7 +30,7 @@ export default function MessageList({ messages }: MessageListProps) {
         )}
         {messages.length > 0 &&
           messages.map((message) => (
-            <Message key={message.id} message={message} />
+            <Message key={message.id} message={message} parentWidth={width} />
           ))}
       </div>
     </ScrollArea>
