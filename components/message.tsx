@@ -2,13 +2,13 @@ import { Card } from "@/components/ui/card";
 import { useText2SQL } from "@/hooks/useText2SQL";
 import { useChatStore } from "@/store/chatStore";
 import type { Message as MessageType } from "@/types/chat";
-import { AlertCircle, CheckCircle, Copy, Database, Play } from "lucide-react";
+import { AlertCircle, CircleCheck, Copy, Database, Play } from "lucide-react";
 import Prism, { type Grammar } from "prismjs";
 import "prismjs/components/prism-sql";
 import "prismjs/themes/prism-tomorrow.css";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { format, type SqlLanguage } from "sql-formatter";
-import { Button } from "./ui/button";
+import { QueryResultsTable } from "./query-results-table";
 
 interface MessageProps {
   message: MessageType;
@@ -32,14 +32,6 @@ export default function Message({ message }: MessageProps) {
   const { generateSQL } = useText2SQL();
   const { conversationId, mode, limit, updateMessage, setConversationId, setLimit } = useChatStore();
 
-  const limitOptions = [1, 5, 10, 25, 50, 100, 250];
-  const currentLimitIndex = limitOptions.indexOf(limit);
-
-  const cycleLimit = () => {
-    const nextIndex = (currentLimitIndex + 1) % limitOptions.length;
-    setLimit(limitOptions[nextIndex]);
-  };
-
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -50,15 +42,13 @@ export default function Message({ message }: MessageProps) {
     }
   };
 
-  const runQuery = async () => {
-    if (!message.sql) return;
-
+  const executeQuery = async (sql: string, newLimit: number) => {
     setIsRunning(true);
     try {
       const response = await generateSQL({
-        prompt: message.sql,
+        prompt: sql,
         conversationID: conversationId,
-        limit: limit,
+        limit: newLimit,
         mode: mode,
         runQuery: true,
       });
@@ -78,10 +68,20 @@ export default function Message({ message }: MessageProps) {
     }
   };
 
+  const runQuery = async () => {
+    if (!message.sql) return;
+    setLimit(100);
+    await executeQuery(message.sql, 100);
+  };
+
   const isUser = message.role === "user";
 
   const highlightedCode = useMemo(
-    () => formatAndHighlightSQL(String(message.sql).replace(/\n$/, ""), "postgresql"),
+    () =>
+      formatAndHighlightSQL(
+        String(message.sql).replace(/\n$/, ""),
+        process.env.NEXT_PUBLIC_SQL_DIALECT || "postgresql"
+      ),
     [message.sql]
   );
 
@@ -150,14 +150,6 @@ export default function Message({ message }: MessageProps) {
                     </span>
                   </div>
                   <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="px-1 sm:px-2 py-1 h-auto rounded-sm text-xs text-gray-400 hover:text-white hover:bg-white/10"
-                      onClick={cycleLimit}
-                    >
-                      {limit} result{limit !== 1 ? "s" : ""}
-                    </Button>
                     <button
                       onClick={runQuery}
                       disabled={isRunning}
@@ -171,7 +163,7 @@ export default function Message({ message }: MessageProps) {
                       className="cursor-pointer text-xs text-gray-400 hover:text-white transition-colors flex items-center gap-1"
                     >
                       {copied ? (
-                        <CheckCircle size={12} className="sm:w-3.5 sm:h-3.5" />
+                        <CircleCheck size={12} className="sm:w-3.5 sm:h-3.5" />
                       ) : (
                         <Copy size={12} className="sm:w-3.5 sm:h-3.5" />
                       )}
@@ -186,25 +178,16 @@ export default function Message({ message }: MessageProps) {
               </div>
             )}
 
-            {message.results && (
+            {message.results && !isRunning && (
               <div className="mt-2 sm:mt-3">
-                <div className="flex items-center gap-1 sm:gap-2 mb-2">
-                  <CheckCircle size={12} className="text-gray-300 sm:w-3.5 sm:h-3.5" />
-                  <span className="text-xs sm:text-sm font-medium text-gray-300">
-                    {message.results.length === 0 ? "Query executed" : `Query results (${message.results.length} rows)`}
-                  </span>
-                </div>
-                {message.results.length > 0 ? (
-                  <div className="bg-black/30 p-2 sm:p-3 rounded-lg border border-gray-700 max-h-32 sm:max-h-40 overflow-auto no-scrollbar">
-                    <pre className="text-xs text-gray-300 max-w-full">{JSON.stringify(message.results, null, 2)}</pre>
-                  </div>
-                ) : (
-                  <div className="bg-black/30 p-2 sm:p-3 rounded-lg border border-gray-700">
-                    <p className="text-xs text-gray-400 italic">
-                      The query executed successfully but returned no data.
-                    </p>
-                  </div>
-                )}
+                <QueryResultsTable
+                  rows={message.results}
+                  limit={limit}
+                  onLimitChange={(newLimit) => {
+                    setLimit(newLimit);
+                    executeQuery(message.sql!, newLimit);
+                  }}
+                />
               </div>
             )}
 

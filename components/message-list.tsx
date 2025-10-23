@@ -9,7 +9,7 @@ interface MessageListProps {
 export default function MessageList({ messages }: MessageListProps) {
   return (
     <ScrollArea className="flex-1 h-full scroll-area">
-      <div className="px-2 sm:px-4 py-0 space-y-3 sm:space-y-4 pb-4">
+      <div className="px-2 sm:px-4 py-0 space-y-3 sm:space-y-4">
         {messages.length === 0 && (
           <div className="text-center text-gray-400 py-6 sm:py-8">
             <p className="text-base sm:text-lg mb-2">Welcome to Text2SQL Chat Demo</p>

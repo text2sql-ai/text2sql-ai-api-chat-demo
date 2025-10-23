@@ -57,7 +57,7 @@ export default function ChatInterface() {
   return (
     <div className="flex flex-col h-[calc(100svh-65px)] bg-transparent overflow-hidden">
       <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full p-2 sm:p-4 h-full">
-        <Card className="flex-1 flex flex-col pb-2 bg-black/20 backdrop-blur-sm border-white/10 overflow-hidden rounded-b-none">
+        <Card className="flex-1 flex flex-col pb-4 bg-black/20 backdrop-blur-sm border-white/10 overflow-hidden rounded-b-none">
           <MessageList messages={messages} />
         </Card>
         <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />
