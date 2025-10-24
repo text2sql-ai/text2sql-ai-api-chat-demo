@@ -51,10 +51,6 @@ export async function POST(request: NextRequest) {
 
     const data = await response.json();
 
-    if (!body.runQuery) {
-      delete data.results;
-    }
-
     return NextResponse.json(data);
   } catch (error) {
     console.error("Text2SQL API error:", error);

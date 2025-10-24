@@ -1,18 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Download, Info, Maximize2 } from "lucide-react";
 import { useState } from "react";
 
 interface QueryResultsTableProps {
   rows: Record<string, any>[];
-  onLimitChange?: (limit: number) => void;
   limit?: number;
+  actualLimit?: number;
 }
-
-const ROW_LIMIT_OPTIONS = [100, 500, 1000, 5000];
 
 const convertToCSV = ({ rows, columns }: { rows: Record<string, any>[]; columns: string[] }) => {
   const header = columns.join(",");
@@ -64,7 +61,7 @@ const ResultsTable = ({ rows, columns, className = "" }: ResultsTableProps) => (
   </table>
 );
 
-export const QueryResultsTable = ({ rows, onLimitChange, limit }: QueryResultsTableProps) => {
+export const QueryResultsTable = ({ rows, limit, actualLimit }: QueryResultsTableProps) => {
   const [isFullScreen, setIsFullScreen] = useState(false);
 
   if (rows.length === 0) {
@@ -76,7 +73,7 @@ export const QueryResultsTable = ({ rows, onLimitChange, limit }: QueryResultsTa
   }
 
   const columns = Object.keys(rows[0]!);
-  const isLimited = rows.length === limit;
+  const isLimited = rows.length === (actualLimit || limit);
 
   const handleExportCSV = () => {
     const csv = convertToCSV({ rows, columns });
@@ -136,41 +133,24 @@ export const QueryResultsTable = ({ rows, onLimitChange, limit }: QueryResultsTa
           <ResultsTable rows={rows} columns={columns} />
         </div>
         {isLimited && (
-          <div className="flex flex-col gap-3 border-t border-gray-700 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1 text-sm text-gray-400">
-                <TooltipProvider delayDuration={0}>
-                  <Tooltip>
-                    <TooltipTrigger className="cursor-help">
-                      <span className="flex items-center gap-1 text-xs">
-                        (Limited to only {limit} rows)
-                        <Info className="h-4 w-4 text-gray-400 hover:text-gray-300" />
-                      </span>
-                    </TooltipTrigger>
-                    <TooltipContent className="max-w-[500px] p-3 text-xs leading-relaxed" sideOffset={5}>
-                      <p className="m-0 whitespace-normal p-0">
-                        Results are limited to optimize browser performance, especially for queries returning large
-                        datasets. You can adjust or remove this limit using the dropdown.
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-400">Limit results to:</span>
-              <Select value={limit?.toString()} onValueChange={(value) => onLimitChange?.(Number(value))}>
-                <SelectTrigger data-testid="query-results-limit-select" className="h-8 w-[110px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {ROW_LIMIT_OPTIONS.map((limit) => (
-                    <SelectItem key={limit} value={limit.toString()}>
-                      {limit} rows
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          <div className="flex items-center gap-2 border-t border-gray-700 px-4 py-3">
+            <div className="flex items-center gap-1 text-sm text-gray-400">
+              <TooltipProvider delayDuration={0}>
+                <Tooltip>
+                  <TooltipTrigger className="cursor-help">
+                    <span className="flex items-center gap-1 text-xs">
+                      (Limited to only {actualLimit || limit} rows)
+                      <Info className="h-4 w-4 text-gray-400 hover:text-gray-300" />
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-[500px] p-3 text-xs leading-relaxed" sideOffset={5}>
+                    <p className="m-0 whitespace-normal p-0">
+                      Results are limited to optimize browser performance, especially for queries returning large
+                      datasets. You can adjust this limit in the chat input area.
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </div>
         )}

@@ -9,4 +9,5 @@ export interface Message {
   results?: any[];
   runError?: string;
   databaseType?: string;
+  resultsLimit?: number;
 }

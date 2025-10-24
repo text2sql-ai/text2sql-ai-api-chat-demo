@@ -16,6 +16,8 @@ const TOOLTIP_CONTENT = {
   "one-shot": "One-shot mode: Immediate SQL generation",
 };
 
+const ROW_LIMIT_OPTIONS = [100, 500, 1000, 5000];
+
 const MODE_OPTIONS = {
   conversational: {
     label: "Conversational",
@@ -31,7 +33,7 @@ const MODE_OPTIONS = {
 
 export default function ChatInput({ onSendMessage, isLoading }: ChatInputProps) {
   const [message, setMessage] = useState("");
-  const { clearHistory, mode, setMode } = useChatStore();
+  const { clearHistory, mode, setMode, limit, setLimit } = useChatStore();
 
   const handleClearHistory = () => {
     clearHistory();
@@ -63,17 +65,50 @@ export default function ChatInput({ onSendMessage, isLoading }: ChatInputProps) 
           className="text-xs sm:text-sm w-full min-h-[50px] sm:min-h-[60px] max-h-[50px] sm:max-h-[60px] resize-none bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400 focus:ring-blue-400/20 pr-12 sm:pr-14"
           disabled={isLoading}
         />
-        <Button
-          type="submit"
-          disabled={!message.trim() || isLoading}
-          className="absolute top-1.5 sm:top-2 right-1.5 sm:right-2 text-white size-6 sm:size-8 p-0 bg-[#6D29D9] hover:bg-[#581C99]"
-        >
-          {isLoading ? <Loader2 className="animate-spin size-3 sm:size-4" /> : <Send className="size-3 sm:size-4" />}
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="submit"
+              disabled={!message.trim() || isLoading}
+              className="absolute top-1.5 sm:top-2 right-1.5 sm:right-2 text-white size-6 sm:size-8 p-0 bg-[#6D29D9] hover:bg-[#581C99]"
+            >
+              {isLoading ? (
+                <Loader2 className="animate-spin size-3 sm:size-4" />
+              ) : (
+                <Send className="size-3 sm:size-4" />
+              )}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Generate SQL and run</p>
+          </TooltipContent>
+        </Tooltip>
       </form>
       <div className="flex items-center justify-end sm:justify-between gap-2 sm:gap-4 mt-1 sm:mt-2">
         <p className="text-xs text-gray-400 hidden sm:block">Press Enter to send, Shift+Enter for new line</p>
         <div className="flex items-center gap-0.5 mr-1">
+          <Select value={limit.toString()} onValueChange={(value) => setLimit(Number(value))}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <SelectTrigger className="h-5! sm:h-6! border-none bg-transparent! hover:bg-neutral-800/50! transition-all! duration-200! pr-1 pl-2 gap-1 [&_>svg]:size-3 text-xs rounded-sm text-gray-300 hover:text-white border-white/20 w-fit">
+                  <SelectValue>
+                    <span className="text-xs">{limit} rows</span>
+                  </SelectValue>
+                </SelectTrigger>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Limit query results</p>
+              </TooltipContent>
+            </Tooltip>
+            <SelectContent>
+              {ROW_LIMIT_OPTIONS.map((limitValue) => (
+                <SelectItem key={limitValue} value={limitValue.toString()}>
+                  {limitValue} rows
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
           <Select value={mode} onValueChange={setMode}>
             <Tooltip>
               <TooltipTrigger asChild>

@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import { useText2SQL } from "@/hooks/useText2SQL";
 import { useChatStore } from "@/store/chatStore";
 import type { Message as MessageType } from "@/types/chat";
-import { AlertCircle, CircleCheck, Copy, Database, Play } from "lucide-react";
+import { AlertCircle, CircleCheck, Copy, Database } from "lucide-react";
 import Prism, { type Grammar } from "prismjs";
 import "prismjs/components/prism-sql";
 import "prismjs/themes/prism-tomorrow.css";
@@ -27,11 +27,9 @@ const formatAndHighlightSQL = (code: string, dialect: string): string => {
 
 export default function Message({ message }: MessageProps) {
   const [copied, setCopied] = useState(false);
-  const [isRunning, setIsRunning] = useState(false);
   const [scrollAreaWidth, setScrollAreaWidth] = useState(0);
   const messageRef = useRef<HTMLDivElement>(null);
-  const { generateSQL } = useText2SQL();
-  const { conversationId, mode, limit, updateMessage, setConversationId, setLimit } = useChatStore();
+  const { limit } = useChatStore();
 
   const copyToClipboard = async (text: string) => {
     try {
@@ -41,38 +39,6 @@ export default function Message({ message }: MessageProps) {
     } catch (err) {
       console.error("Failed to copy text: ", err);
     }
-  };
-
-  const executeQuery = async (sql: string, newLimit: number) => {
-    setIsRunning(true);
-    try {
-      const response = await generateSQL({
-        prompt: sql,
-        conversationID: conversationId,
-        limit: newLimit,
-        mode: mode,
-        runQuery: true,
-      });
-
-      updateMessage(message.id, {
-        results: response.results,
-        runError: response.runError,
-      });
-
-      if (response.conversationID) {
-        setConversationId(response.conversationID);
-      }
-    } catch (error) {
-      console.error("Failed to run query:", error);
-    } finally {
-      setIsRunning(false);
-    }
-  };
-
-  const runQuery = async () => {
-    if (!message.sql) return;
-    setLimit(100);
-    await executeQuery(message.sql, 100);
   };
 
   const isUser = message.role === "user";
@@ -148,14 +114,6 @@ export default function Message({ message }: MessageProps) {
                   </div>
                   <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
                     <button
-                      onClick={runQuery}
-                      disabled={isRunning}
-                      className="cursor-pointer text-xs text-gray-400 hover:text-white transition-colors flex items-center gap-1 disabled:opacity-50"
-                    >
-                      <Play size={12} className="sm:w-3.5 sm:h-3.5" />
-                      {isRunning ? "Running..." : "Run"}
-                    </button>
-                    <button
                       onClick={() => copyToClipboard(message.sql!)}
                       className="cursor-pointer text-xs text-gray-400 hover:text-white transition-colors flex items-center gap-1"
                     >
@@ -175,16 +133,9 @@ export default function Message({ message }: MessageProps) {
               </div>
             )}
 
-            {message.results && !isRunning && (
+            {message.results && (
               <div className="mt-2 sm:mt-3">
-                <QueryResultsTable
-                  rows={message.results}
-                  limit={limit}
-                  onLimitChange={(newLimit) => {
-                    setLimit(newLimit);
-                    executeQuery(message.sql!, newLimit);
-                  }}
-                />
+                <QueryResultsTable rows={message.results} limit={limit} actualLimit={message.resultsLimit} />
               </div>
             )}
 

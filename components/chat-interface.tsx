@@ -37,6 +37,7 @@ export default function ChatInterface() {
         results: response.results,
         runError: response.runError,
         databaseType: response.databaseType,
+        resultsLimit: limit,
       };
 
       addMessage(assistantMessage);
