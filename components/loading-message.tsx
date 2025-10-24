@@ -1,7 +1,14 @@
 import { Card } from "@/components/ui/card";
 import { useEffect, useRef, useState } from "react";
 
-const loadingPhrases = ["Thinking", "Processing", "Working", "Computing", "Analyzing"];
+const loadingPhrases = [
+  "Analyzing your request",
+  "Exploring the database",
+  "Formulating SQL",
+  "Validating Code",
+  "Executing request",
+  "Formatting Results",
+];
 
 export default function LoadingMessage() {
   const [currentPhrase, setCurrentPhrase] = useState(0);

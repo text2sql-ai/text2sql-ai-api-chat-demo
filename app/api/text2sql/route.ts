@@ -29,6 +29,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "TEXT2SQL_API_KEY is not configured" }, { status: 500 });
     }
 
+    if (!CONNECTION_ID) {
+      return NextResponse.json({ error: "TEXT2SQL_CONNECTION_ID is not configured" }, { status: 500 });
+    }
+
     const requestBody = { ...body, connectionID: CONNECTION_ID, runQuery: true };
 
     const response = await fetch(`${API_BASE_URL}/api/external/generate-sql`, {
