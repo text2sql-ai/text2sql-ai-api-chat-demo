@@ -14,6 +14,7 @@ export interface Text2SQLResponse {
   results?: any[]; // eslint-disable-line @typescript-eslint/no-explicit-any
   runError?: string;
   conversationID: string;
+  databaseType?: string;
 }
 
 const API_BASE_URL = process.env.TEXT2SQL_API_BASE_URL || "https://api.text2sql.ai";

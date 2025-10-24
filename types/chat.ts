@@ -8,4 +8,5 @@ export interface Message {
   explanation?: string;
   results?: any[];
   runError?: string;
+  databaseType?: string;
 }

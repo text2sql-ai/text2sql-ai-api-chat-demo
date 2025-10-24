@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useChatStore } from "@/store/chatStore";
 import { Database, Loader2, MessageCircle, Send, Trash } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 interface ChatInputProps {
@@ -15,16 +16,25 @@ const TOOLTIP_CONTENT = {
   "one-shot": "One-shot mode: Immediate SQL generation",
 };
 
+const MODE_OPTIONS = {
+  conversational: {
+    label: "Conversational",
+    shortLabel: "Chat",
+    icon: MessageCircle,
+  },
+  "one-shot": {
+    label: "One-Shot",
+    shortLabel: "SQL",
+    icon: Database,
+  },
+};
+
 export default function ChatInput({ onSendMessage, isLoading }: ChatInputProps) {
   const [message, setMessage] = useState("");
   const { clearHistory, mode, setMode } = useChatStore();
 
   const handleClearHistory = () => {
     clearHistory();
-  };
-
-  const toggleMode = () => {
-    setMode(mode === "conversational" ? "one-shot" : "conversational");
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -64,34 +74,36 @@ export default function ChatInput({ onSendMessage, isLoading }: ChatInputProps) 
       <div className="flex items-center justify-end sm:justify-between gap-2 sm:gap-4 mt-1 sm:mt-2">
         <p className="text-xs text-gray-400 hidden sm:block">Press Enter to send, Shift+Enter for new line</p>
         <div className="flex items-center gap-0.5 mr-1">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-5 sm:h-6 text-xs rounded-sm text-gray-300 hover:text-white hover:bg-white/10"
-                onClick={toggleMode}
-              >
-                {mode === "conversational" && (
-                  <>
-                    <MessageCircle className="size-3 sm:size-3.5" />
-                    <span className="hidden sm:inline">Conversational</span>
-                    <span className="sm:hidden">Chat</span>
-                  </>
-                )}
-                {mode === "one-shot" && (
-                  <>
-                    <Database className="size-3 sm:size-3.5" />
-                    <span className="hidden sm:inline">One-Shot</span>
-                    <span className="sm:hidden">SQL</span>
-                  </>
-                )}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{TOOLTIP_CONTENT[mode as keyof typeof TOOLTIP_CONTENT]}</p>
-            </TooltipContent>
-          </Tooltip>
+          <Select value={mode} onValueChange={setMode}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <SelectTrigger className="h-5! sm:h-6! border-none bg-transparent! hover:bg-neutral-800/50! transition-all! duration-200! pr-1 pl-2 gap-1 [&_>svg]:size-3 text-xs rounded-sm text-gray-300 hover:text-white border-white/20 w-fit">
+                  <SelectValue>
+                    <div className="flex items-center gap-1">
+                      {React.createElement(MODE_OPTIONS[mode as keyof typeof MODE_OPTIONS].icon, {
+                        className: "size-3 sm:size-3.5",
+                      })}
+                      <span className="hidden sm:inline">{MODE_OPTIONS[mode as keyof typeof MODE_OPTIONS].label}</span>
+                      <span className="sm:hidden">{MODE_OPTIONS[mode as keyof typeof MODE_OPTIONS].shortLabel}</span>
+                    </div>
+                  </SelectValue>
+                </SelectTrigger>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{TOOLTIP_CONTENT[mode as keyof typeof TOOLTIP_CONTENT]}</p>
+              </TooltipContent>
+            </Tooltip>
+            <SelectContent>
+              {Object.entries(MODE_OPTIONS).map(([value, option]) => (
+                <SelectItem key={value} value={value}>
+                  <div className="flex items-center gap-2">
+                    {React.createElement(option.icon, { className: "size-4" })}
+                    <span>{option.label}</span>
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
           <Tooltip>
             <TooltipTrigger asChild>

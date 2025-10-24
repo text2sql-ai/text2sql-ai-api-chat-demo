@@ -14,6 +14,7 @@ export interface Text2SQLResponse {
   results?: any[]; // eslint-disable-line @typescript-eslint/no-explicit-any
   runError?: string;
   conversationID: string;
+  databaseType?: string;
 }
 
 export function useText2SQL() {

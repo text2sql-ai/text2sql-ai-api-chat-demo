@@ -33,7 +33,6 @@ A modern, interactive chat interface for converting natural language to SQL quer
    TEXT2SQL_API_KEY=your_api_key_here
    TEXT2SQL_CONNECTION_ID=your_connection_id_here
    TEXT2SQL_API_BASE_URL=https://api.text2sql.ai  # Optional, defaults to this
-   NEXT_PUBLIC_SQL_DIALECT=postgresql  # Optional, defaults to postgresql
    ```
 
 4. **Start the development server:**
@@ -87,7 +86,6 @@ This application uses a Next.js API route (`/api/text2sql`) that integrates with
 - `TEXT2SQL_API_KEY` (required) - Your Text2SQL API key
 - `TEXT2SQL_CONNECTION_ID` (optional) - Database connection ID for query execution
 - `TEXT2SQL_API_BASE_URL` (optional) - API base URL (defaults to https://api.text2sql.ai)
-- `NEXT_PUBLIC_SQL_DIALECT` (optional) - SQL dialect for syntax highlighting and formatting (defaults to "postgresql")
 
 ## 🛠️ Tech Stack
 

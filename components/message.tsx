@@ -16,9 +16,10 @@ interface MessageProps {
 
 const formatAndHighlightSQL = (code: string, dialect: string): string => {
   try {
-    const formattedCode = format(code, { language: dialect as SqlLanguage });
-    const prismLanguage = Prism.languages[dialect] || (Prism.languages.sql as Grammar);
-    return Prism.highlight(formattedCode, prismLanguage, dialect);
+    const finalDialect = dialect === "postgres" ? "postgresql" : dialect;
+    const formattedCode = format(code, { language: finalDialect as SqlLanguage });
+    const prismLanguage = Prism.languages[finalDialect] || (Prism.languages.sql as Grammar);
+    return Prism.highlight(formattedCode, prismLanguage, finalDialect);
   } catch {
     return code;
   }
@@ -77,12 +78,8 @@ export default function Message({ message }: MessageProps) {
   const isUser = message.role === "user";
 
   const highlightedCode = useMemo(
-    () =>
-      formatAndHighlightSQL(
-        String(message.sql).replace(/\n$/, ""),
-        process.env.NEXT_PUBLIC_SQL_DIALECT || "postgresql"
-      ),
-    [message.sql]
+    () => formatAndHighlightSQL(String(message.sql).replace(/\n$/, ""), message.databaseType || "postgresql"),
+    [message.sql, message.databaseType]
   );
 
   // Auto-scroll to new messages

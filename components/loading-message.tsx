@@ -5,9 +5,9 @@ const loadingPhrases = [
   "Analyzing your request",
   "Exploring the database",
   "Formulating SQL",
-  "Validating Code",
+  "Validating code",
   "Executing request",
-  "Formatting Results",
+  "Formatting results",
 ];
 
 export default function LoadingMessage() {
