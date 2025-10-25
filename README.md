@@ -1,301 +1,127 @@
-Welcome to your new TanStack app! 
+# Text2SQL Chat Demo
 
-# Getting Started
+A modern, interactive chat interface for converting natural language to SQL queries using the Text2SQL API. This React application provides a beautiful dark-mode UI with real-time conversation capabilities, SQL query generation, execution, and comprehensive error handling.
 
-To run this application:
+## 🚀 Quick Start
 
-```bash
-pnpm install
-pnpm start
-```
+### Prerequisites
 
-# Building For Production
+- Node.js 18+ and npm/pnpm
+- Text2SQL API key from [text2sql.ai](https://text2sql.ai)
 
-To build this application for production:
+### Installation
 
-```bash
-pnpm build
-```
+1. **Clone the repository:**
 
-## Testing
+   ```bash
+   git clone https://github.com/text2sql-ai/chat-demo.git
+   cd chat-demo
+   ```
 
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
+2. **Install dependencies:**
 
-```bash
-pnpm test
-```
+   ```bash
+   npm install
+   # or
+   pnpm install
+   ```
 
-## Styling
+3. **Configure environment variables:**
+   Create a `.env` file in the root directory:
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+   ```bash
+   TEXT2SQL_API_KEY=your_api_key_here
+   TEXT2SQL_CONNECTION_ID=your_connection_id_here
+   TEXT2SQL_API_BASE_URL=https://api.text2sql.ai  # Optional, defaults to this
+   ```
 
+4. **Start the development server:**
 
-## Linting & Formatting
+   ```bash
+   npm run dev
+   ```
 
+   The application will be available at `http://localhost:3003`
 
-This project uses [eslint](https://eslint.org/) and [prettier](https://prettier.io/) for linting and formatting. Eslint is configured using [tanstack/eslint-config](https://tanstack.com/config/latest/docs/eslint). The following scripts are available:
+## 📖 Usage
 
-```bash
-pnpm lint
-pnpm format
-pnpm check
-```
+### Basic Usage
 
+1. **Open the application** in your browser
+2. **Type natural language queries** such as:
+   - "Show me all users"
+   - "Find customers who made purchases over $1000"
+   - "Get the top 10 products by sales"
+   - "How many orders were placed last month?"
+3. **View generated SQL** with explanations
+4. **Execute queries** to see results (requires connection ID)
+5. **Continue conversations** to refine queries
 
+### Interface Features
 
-## Routing
-This project uses [TanStack Router](https://tanstack.com/router). The initial setup is a file based router. Which means that the routes are managed as files in `src/routes`.
+- **Mode Toggle**: Switch between "One-Shot" and "Conversational" modes
+- **Result Limits**: Configure maximum rows returned (1, 5, 10, 25, 50, 100, 250)
+- **Query Execution**: Run generated SQL queries and view results
+- **Copy to Clipboard**: Copy SQL queries for external use
+- **Clear History**: Reset conversation and start fresh
+- **Auto-scroll**: Automatically scrolls to new messages and results
 
-### Adding A Route
+## 🔌 API Integration
 
-To add a new route to your application just add another a new file in the `./src/routes` directory.
+This application uses a Next.js API route (`/api/text2sql`) that integrates with the Text2SQL API's Generate SQL endpoint. The backend handles all API parameters including conversation memory, query execution, and both one-shot and conversational modes.
 
-TanStack will automatically generate the content of the route file for you.
+**📚 Complete API Documentation:** [text2sql.ai/docs/api-integration](https://www.text2sql.ai/docs/api-integration#generate-sql)
 
-Now that you have two routes you can use a `Link` component to navigate between them.
+### Key Parameters
 
-### Adding Links
+- `prompt` (required) - Natural language description of the query
+- `connectionID` (optional) - Database connection ID for query execution
+- `runQuery` (optional) - Execute queries and return results
+- `limit` (optional) - Maximum rows to return (defaults to 100)
+- `conversationID` (optional) - Continue existing conversations
+- `mode` (optional) - "one-shot" or "conversational" mode
 
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
+### Environment Variables
 
-```tsx
-import { Link } from "@tanstack/react-router";
-```
+- `TEXT2SQL_API_KEY` (required) - Your Text2SQL API key
+- `TEXT2SQL_CONNECTION_ID` (optional) - Database connection ID for query execution
+- `TEXT2SQL_API_BASE_URL` (optional) - API base URL (defaults to https://api.text2sql.ai)
 
-Then anywhere in your JSX you can use it like so:
+## 🛠️ Tech Stack
 
-```tsx
-<Link to="/about">About</Link>
-```
+- **Frontend Framework**: Next.js 15 with React 19 and TypeScript
+- **State Management**: Zustand for client state
+- **Styling**: Tailwind CSS with custom design system
+- **UI Components**: shadcn/ui component library
+- **Icons**: Lucide React
+- **Build Tool**: Next.js with TypeScript support
+- **Development**: ESLint for code quality
 
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you use the `<Outlet />` component.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { Outlet, createRootRoute } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-
-import { Link } from "@tanstack/react-router";
-
-export const Route = createRootRoute({
-  component: () => (
-    <>
-      <header>
-        <nav>
-          <Link to="/">Home</Link>
-          <Link to="/about">About</Link>
-        </nav>
-      </header>
-      <Outlet />
-      <TanStackRouterDevtools />
-    </>
-  ),
-})
-```
-
-The `<TanStackRouterDevtools />` component is not required so you can remove it if you don't want it in your layout.
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-const peopleRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/people",
-  loader: async () => {
-    const response = await fetch("https://swapi.dev/api/people");
-    return response.json() as Promise<{
-      results: {
-        name: string;
-      }[];
-    }>;
-  },
-  component: () => {
-    const data = peopleRoute.useLoaderData();
-    return (
-      <ul>
-        {data.results.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    );
-  },
-});
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-### React-Query
-
-React-Query is an excellent addition or alternative to route loading and integrating it into you application is a breeze.
-
-First add your dependencies:
+## 🚀 Available Scripts
 
 ```bash
-pnpm add @tanstack/react-query @tanstack/react-query-devtools
+# Development
+npm run dev          # Start Next.js development server
+
+# Building
+npm run build        # Build for production
+npm run start        # Start production server
+
+# Code Quality
+npm run lint         # Run ESLint
 ```
 
-Next we'll need to create a query client and provider. We recommend putting those in `main.tsx`.
+## 🔗 Links
 
-```tsx
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+- **Live Demo**: [text2sql.ai/chat-demo](https://text2sql.ai/chat-demo)
+- **API Documentation**: [text2sql.ai/docs/api-integration](https://www.text2sql.ai/docs/api-integration#generate-sql)
+- **GitHub Repository**: [github.com/text2sql-ai/chat-demo](https://github.com/text2sql-ai/chat-demo)
+- **Text2SQL Platform**: [text2sql.ai](https://text2sql.ai)
 
-// ...
+## 📄 License
 
-const queryClient = new QueryClient();
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-// ...
+---
 
-if (!rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement);
-
-  root.render(
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
-  );
-}
-```
-
-You can also add TanStack Query Devtools to the root route (optional).
-
-```tsx
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
-const rootRoute = createRootRoute({
-  component: () => (
-    <>
-      <Outlet />
-      <ReactQueryDevtools buttonPosition="top-right" />
-      <TanStackRouterDevtools />
-    </>
-  ),
-});
-```
-
-Now you can use `useQuery` to fetch your data.
-
-```tsx
-import { useQuery } from "@tanstack/react-query";
-
-import "./App.css";
-
-function App() {
-  const { data } = useQuery({
-    queryKey: ["people"],
-    queryFn: () =>
-      fetch("https://swapi.dev/api/people")
-        .then((res) => res.json())
-        .then((data) => data.results as { name: string }[]),
-    initialData: [],
-  });
-
-  return (
-    <div>
-      <ul>
-        {data.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-export default App;
-```
-
-You can find out everything you need to know on how to use React-Query in the [React-Query documentation](https://tanstack.com/query/latest/docs/framework/react/overview).
-
-## State Management
-
-Another common requirement for React applications is state management. There are many options for state management in React. TanStack Store provides a great starting point for your project.
-
-First you need to add TanStack Store as a dependency:
-
-```bash
-pnpm add @tanstack/store
-```
-
-Now let's create a simple counter in the `src/App.tsx` file as a demonstration.
-
-```tsx
-import { useStore } from "@tanstack/react-store";
-import { Store } from "@tanstack/store";
-import "./App.css";
-
-const countStore = new Store(0);
-
-function App() {
-  const count = useStore(countStore);
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-    </div>
-  );
-}
-
-export default App;
-```
-
-One of the many nice features of TanStack Store is the ability to derive state from other state. That derived state will update when the base state updates.
-
-Let's check this out by doubling the count using derived state.
-
-```tsx
-import { useStore } from "@tanstack/react-store";
-import { Store, Derived } from "@tanstack/store";
-import "./App.css";
-
-const countStore = new Store(0);
-
-const doubledStore = new Derived({
-  fn: () => countStore.state * 2,
-  deps: [countStore],
-});
-doubledStore.mount();
-
-function App() {
-  const count = useStore(countStore);
-  const doubledCount = useStore(doubledStore);
-
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-      <div>Doubled - {doubledCount}</div>
-    </div>
-  );
-}
-
-export default App;
-```
-
-We use the `Derived` class to create a new store that is derived from another store. The `Derived` class has a `mount` method that will start the derived store updating.
-
-Once we've created the derived store we can use it in the `App` component just like we would any other store using the `useStore` hook.
-
-You can find out everything you need to know on how to use TanStack Store in the [TanStack Store documentation](https://tanstack.com/store/latest).
-
-# Demo files
-
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
+Built with ❤️ by the Text2SQL team
