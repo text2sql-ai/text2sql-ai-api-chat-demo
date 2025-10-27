@@ -47,7 +47,7 @@ A modern, interactive chat interface for converting natural language to SQL quer
 
 Watch the demo to see the application in action:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/s91BcoVCc9A" title="Text2SQL Chat Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+[![Youtube Video](https://github.com/user-attachments/assets/d046d114-45fb-4581-aa2a-e4032aa46e7c)](https://www.youtube.com/watch?v=s91BcoVCc9A)
 
 ## 📖 Usage
 
