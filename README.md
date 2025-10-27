@@ -43,6 +43,12 @@ A modern, interactive chat interface for converting natural language to SQL quer
 
    The application will be available at `http://localhost:3003`
 
+## 🎥 Demo Video
+
+Watch the demo to see the application in action:
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/s91BcoVCc9A" title="Text2SQL Chat Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
 ## 📖 Usage
 
 ### Basic Usage
