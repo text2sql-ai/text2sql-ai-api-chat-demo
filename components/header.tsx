@@ -1,17 +1,17 @@
-import { Button } from '@/components/ui/button'
-import { TooltipProvider } from '@/components/ui/tooltip'
-import { openUrl } from '@/lib/utils'
-import { ArrowUpRight } from 'lucide-react'
-import GitHub from './icons/GitHub'
+import { Button } from "@/components/ui/button";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { openUrl } from "@/lib/utils";
+import { ArrowUpRight } from "lucide-react";
+import GitHub from "./icons/GitHub";
 
 export default function Header() {
   const goToRepository = () => {
-    openUrl('https://github.com/text2sql-ai/chat-demo')
-  }
+    openUrl("https://github.com/text2sql-ai/text2sql-ai-api-chat-demo");
+  };
 
   const goToDocs = () => {
-    openUrl('https://www.text2sql.ai/docs/api-integration#generate-sql')
-  }
+    openUrl("https://www.text2sql.ai/docs/api-integration#generate-sql");
+  };
 
   return (
     <TooltipProvider>
@@ -22,18 +22,10 @@ export default function Header() {
             target="_blank"
             className="flex items-center hover:opacity-80 transition-opacity"
           >
-            <img
-              className="mr-2 size-6"
-              src={'/logo_icon.svg'}
-              alt="logo icon"
-            />
-            <span className="text-base sm:text-lg font-semibold">
-              Text2SQL.ai
-            </span>
+            <img className="mr-2 size-6" src={"/logo_icon.svg"} alt="logo icon" />
+            <span className="text-base sm:text-lg font-semibold">Text2SQL.ai</span>
           </a>
-          <span className="ml-4 text-sm text-gray-300 hidden sm:block">
-            Chat Demo
-          </span>
+          <span className="ml-4 text-sm text-gray-300 hidden sm:block">Chat Demo</span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -59,5 +51,5 @@ export default function Header() {
         </div>
       </header>
     </TooltipProvider>
-  )
+  );
 }

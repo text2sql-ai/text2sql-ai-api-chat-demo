@@ -1,5 +1,4 @@
 import { Card } from "@/components/ui/card";
-import { useText2SQL } from "@/hooks/useText2SQL";
 import { useChatStore } from "@/store/chatStore";
 import type { Message as MessageType } from "@/types/chat";
 import { AlertCircle, CircleCheck, Copy, Database } from "lucide-react";

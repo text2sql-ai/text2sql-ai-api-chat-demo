@@ -14,7 +14,7 @@ A modern, interactive chat interface for converting natural language to SQL quer
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/text2sql-ai/chat-demo.git
+   git clone https://github.com/text2sql-ai/text2sql-ai-api-chat-demo.git
    cd chat-demo
    ```
 
@@ -121,7 +121,7 @@ npm run lint         # Run ESLint
 
 - **Live Demo**: [text2sql.ai/chat-demo](https://text2sql.ai/chat-demo)
 - **API Documentation**: [text2sql.ai/docs/api-integration](https://www.text2sql.ai/docs/api-integration#generate-sql)
-- **GitHub Repository**: [github.com/text2sql-ai/chat-demo](https://github.com/text2sql-ai/chat-demo)
+- **GitHub Repository**: [github.com/text2sql-ai/text2sql-ai-api-chat-demo](https://github.com/text2sql-ai/text2sql-ai-api-chat-demo)
 - **Text2SQL Platform**: [text2sql.ai](https://text2sql.ai)
 
 ## 📄 License
